@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .thank-wrap { text-align: center; max-width: 480px; animation: containerReveal 0.8s var(--ease-out) both; }
+    .heart-icon {
+      font-size: 5rem;
+      display: block;
+      margin-bottom: 22px;
+      animation: heartBeat 1.2s ease-in-out infinite;
+    }
+    @keyframes heartBeat {
+      0%,100% { transform: scale(1); }
+      14%      { transform: scale(1.18); }
+      28%      { transform: scale(1); }
+      42%      { transform: scale(1.12); }
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-wrap">
+    <span class="heart-icon">❤️</span>
+    <h1 style="font-size: 2rem; margin-bottom: 12px;">Thank You, {{ name }}!</h1>
+    <h2 style="font-size: 1rem; margin-bottom: 24px;">Your registration as a blood donor has been received.</h2>
+
+    <div class="list-card" style="background: rgba(255,92,92,0.05); border-color: rgba(255,92,92,0.2); text-align: left;">
+      <p style="line-height: 1.8;">🩸 <strong style="color: var(--text-main);">You're a hero!</strong> A single donation can save up to three lives. Your willingness to help others is commendable and deeply appreciated by the community.</p>
+      <p style="margin-top: 12px; line-height: 1.8;">You'll be contacted with further details about the donation camp date and location.</p>
+    </div>
+
+    <div style="margin-top: 26px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="/main.html" class="btn">← Back to Dashboard</a>
+      <a href="/blooddonation.html" class="btn btn-ghost">View Donor List</a>
+    </div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

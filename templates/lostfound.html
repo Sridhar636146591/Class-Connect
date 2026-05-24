@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>🔎 Lost &amp; Found</h1>
+    <h2>Report a lost item or help someone recover theirs</h2>
+    <hr>
+
+    <div class="list-card reveal" style="max-width: 560px; margin: 0 auto 36px; background: rgba(0,229,192,0.04); border-color: rgba(0,229,192,0.2); border-top: 3px solid var(--accent);">
+      <h3 style="color: var(--accent); text-align: center; border-color: rgba(0,229,192,0.15);">📝 Report an Item</h3>
+      <form action="/add_lostfound" method="post" style="margin: 0;">
+        <label>Item Title</label>
+        <input type="text" name="title" placeholder="e.g. Blue Backpack — Main Gate" required style="max-width: 100%;">
+
+        <label>Description</label>
+        <textarea name="description" rows="3" placeholder="Describe the item — colour, brand, where found/lost..." required style="max-width: 100%; resize: none;"></textarea>
+
+        <label>Your Contact Info</label>
+        <input type="text" name="contact" placeholder="Phone or email" required style="max-width: 100%;">
+
+        <button type="submit" style="width: 100%; margin-top: 18px; background: linear-gradient(135deg, var(--accent), var(--secondary));">
+          Report Item 🔎
+        </button>
+      </form>
+    </div>
+
+    <div class="section-title"><span>🗂️ All Reports</span></div>
+
+    <div class="search-bar-wrap">
+      <input type="text" id="live-search" placeholder="Search items...">
+    </div>
+
+    <div class="list-container">
+      {% for item in items %}
+        <div class="list-card" data-searchable>
+          <h3>🔎 {{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.83rem;">
+            <strong style="color: var(--text-main);">📞 Contact:</strong>
+            <span style="color: var(--accent);">{{ item.contact }}</span>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-center" style="grid-column: 1/-1; color: var(--text-sub); font-style: italic; padding: 30px 0;">
+          No items reported yet. 🎉 Seems nothing is lost today!
+        </p>
+      {% endfor %}
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

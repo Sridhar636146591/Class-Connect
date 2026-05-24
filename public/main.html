@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | Campus Community Hub</title>
+  <link rel="stylesheet" href="m.css">
+  <style>
+    /* ── Welcome banner ── */
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(124,111,255,0.12), rgba(255,92,92,0.07));
+      border: 1px solid rgba(124,111,255,0.2);
+      border-radius: var(--radius-md);
+      padding: 22px 28px;
+      display: flex; align-items: center; gap: 18px;
+      margin-bottom: 30px;
+      animation: fadeInUp 0.5s var(--ease-out) both;
+    }
+    .welcome-avatar {
+      width: 50px; height: 50px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+      box-shadow: 0 0 0 2px rgba(124,111,255,0.3);
+    }
+    .welcome-text h3 { margin: 0 0 4px; font-size: 1.1rem; color: var(--text-main); }
+    .welcome-text p  { margin: 0; font-size: 0.85rem; }
+
+    /* ── Tool chips ── */
+    .tools-strip {
+      display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px;
+      scrollbar-width: none; margin-bottom: 24px;
+    }
+    .tools-strip::-webkit-scrollbar { display: none; }
+    .tool-chip {
+      flex-shrink: 0;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 13px 16px;
+      cursor: pointer; transition: var(--transition);
+      min-width: 76px; text-align: center;
+    }
+    .tool-chip:hover { border-color: var(--secondary); background: rgba(124,111,255,0.1); transform: translateY(-3px); }
+    .tool-chip.active { border-color: var(--secondary); background: rgba(124,111,255,0.15); box-shadow: 0 0 12px -4px var(--secondary-glow); }
+    .tool-chip .tc-icon { font-size: 1.5rem; }
+    .tool-chip .tc-label { font-size: 0.7rem; font-weight: 600; color: var(--text-sub); font-family: var(--font-heading); }
+
+    /* ── Panel base ── */
+    .tool-panel {
+      display: none; margin-bottom: 24px;
+      animation: fadeInUp 0.35s var(--ease-out) both;
+    }
+    .tool-panel.open { display: block; }
+
+    /* ── Pomodoro ── */
+    .pomo-ring {
+      width: 130px; height: 130px; border-radius: 50%;
+      border: 4px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      background: rgba(124,111,255,0.08);
+      box-shadow: 0 0 30px -10px var(--secondary-glow);
+    }
+    .pomo-time { font-family: var(--font-heading); font-size: 2.1rem; font-weight: 800; color: var(--secondary); }
+    .pomo-label { font-size: 0.68rem; color: var(--text-sub); margin-top: 2px; }
+    .pomo-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .pomo-btns button { padding: 8px 20px; border-radius: 50px; font-size: 0.82rem; cursor: pointer; }
+
+    /* ── Quick Notes ── */
+    .qn-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; }
+    .qn-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 14px; font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .qn-item:hover { border-color: rgba(124,111,255,0.3); }
+    .qn-item input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+    .qn-item .qn-text { flex: 1; word-break: break-word; }
+    .qn-item.done .qn-text { text-decoration: line-through; color: var(--text-sub); }
+    .qn-item .qn-time { font-size: 0.7rem; color: var(--text-dim); flex-shrink: 0; }
+    .qn-item .del-qn { margin-left: 4px; background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.9rem; opacity: 0.5; transition: opacity 0.2s; flex-shrink: 0; }
+    .qn-item .del-qn:hover { opacity: 1; }
+    .qn-add { display: flex; gap: 8px; margin-top: 12px; }
+    .qn-add input { flex: 1; border-radius: 10px; padding: 10px 14px; font-size: 0.85rem; }
+    .qn-add button { padding: 10px 16px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; }
+    .qn-tabs { display: flex; gap: 8px; margin-bottom: 4px; }
+    .qn-tab { padding: 6px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600; font-family: var(--font-heading); cursor: pointer; border: 1px solid var(--border); background: none; color: var(--text-sub); transition: var(--transition); }
+    .qn-tab.active { background: rgba(124,111,255,0.15); border-color: var(--secondary); color: var(--secondary); }
+    .qn-view-full {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+      font-size: 0.85rem; color: var(--text-sub); line-height: 1.8;
+      max-height: 280px; overflow-y: auto;
+      white-space: pre-wrap; word-break: break-word;
+      display: none;
+    }
+    .qn-view-full.open { display: block; }
+
+    /* ── Flashcards ── */
+    .fc-card {
+      background: rgba(124,111,255,0.08); border: 1px solid rgba(124,111,255,0.25);
+      border-radius: var(--radius-md); padding: 36px 28px;
+      cursor: pointer; transition: var(--transition);
+      min-height: 130px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+    }
+    .fc-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px -10px var(--secondary-glow); }
+    .fc-question { font-size: 1.05rem; font-weight: 600; color: var(--text-main); }
+    .fc-answer { font-size: 0.95rem; color: var(--accent); display: none; margin-top: 10px; }
+    .fc-card.flipped .fc-question { color: var(--text-sub); font-size: 0.82rem; }
+    .fc-card.flipped .fc-answer { display: block; }
+    .fc-nav { display: flex; gap: 10px; justify-content: center; margin-top: 14px; }
+    .fc-nav button { padding: 8px 18px; border-radius: 50px; font-size: 0.82rem; cursor: pointer; }
+
+    /* ── Mood ── */
+    .mood-emojis { display: flex; gap: 10px; justify-content: center; margin: 14px 0; }
+    .mood-btn { font-size: 2rem; background: none; border: 2px solid var(--border); border-radius: 50%; width: 54px; height: 54px; cursor: pointer; transition: var(--transition); }
+    .mood-btn:hover { border-color: var(--secondary); background: rgba(124,111,255,0.15); transform: scale(1.15); }
+    .mood-log { margin-top: 12px; max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+    .mood-entry { font-size: 0.8rem; color: var(--text-sub); padding: 6px 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+
+    /* ── QUIZ SECTION ── */
+    .quiz-cats {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+      margin-bottom: 0;
+    }
+    @media (min-width: 560px) { .quiz-cats { grid-template-columns: repeat(4, 1fr); } }
+    .quiz-cat-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 18px 12px;
+      cursor: pointer; transition: var(--transition); text-align: center;
+    }
+    .quiz-cat-btn:hover { border-color: var(--secondary); background: rgba(124,111,255,0.1); transform: translateY(-3px); }
+    .quiz-cat-btn.selected { border-color: var(--secondary); background: rgba(124,111,255,0.15); box-shadow: 0 0 14px -4px var(--secondary-glow); }
+    .quiz-cat-icon { font-size: 2rem; }
+    .quiz-cat-name { font-size: 0.78rem; font-weight: 700; font-family: var(--font-heading); color: var(--text-sub); }
+    .quiz-area { margin-top: 20px; display: none; }
+    .quiz-area.open { display: block; animation: fadeInUp 0.35s var(--ease-out) both; }
+    .quiz-q-card {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 24px;
+    }
+    .quiz-question { font-size: 0.98rem; font-weight: 600; color: var(--text-main); margin-bottom: 18px; line-height: 1.5; }
+    .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+    .quiz-opt {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 16px; cursor: pointer; transition: var(--transition);
+      font-size: 0.87rem; color: var(--text-sub);
+    }
+    .quiz-opt:hover:not(.locked) { border-color: var(--secondary); background: rgba(124,111,255,0.1); color: var(--text-main); }
+    .quiz-opt.correct { border-color: var(--accent); background: rgba(0,229,192,0.1); color: var(--accent); }
+    .quiz-opt.wrong   { border-color: var(--primary); background: rgba(255,92,92,0.1); color: var(--primary); }
+    .quiz-opt.locked  { pointer-events: none; }
+    .quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 0.78rem; color: var(--text-sub); flex-wrap: wrap; gap: 8px; }
+    .quiz-score-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,229,192,0.12); border: 1px solid rgba(0,229,192,0.25);
+      color: var(--accent); border-radius: 50px; padding: 4px 14px; font-size: 0.78rem; font-weight: 700; font-family: var(--font-heading);
+    }
+    .quiz-feedback { margin-top: 14px; padding: 12px 16px; border-radius: 10px; font-size: 0.85rem; display: none; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.ok  { background: rgba(0,229,192,0.1); border: 1px solid rgba(0,229,192,0.25); color: var(--accent); }
+    .quiz-feedback.bad { background: rgba(255,92,92,0.1); border: 1px solid rgba(255,92,92,0.25); color: var(--primary); }
+    .quiz-next { margin-top: 14px; width: 100%; cursor: pointer; display: none; }
+    .quiz-next.show { display: block; }
+    .quiz-loading { text-align: center; padding: 30px; color: var(--text-sub); font-size: 0.9rem; }
+    .quiz-progress { height: 4px; background: var(--border); border-radius: 2px; margin-bottom: 14px; overflow: hidden; }
+    .quiz-progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--accent)); border-radius: 2px; transition: width 0.4s var(--ease-out); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <form action="/logout" method="get">
+        <input type="submit" value="🚪 Logout" class="btn btn-ghost">
+      </form>
+      <a href="/profile.html" class="btn btn-ghost">👤 Profile</a>
+    </div>
+
+    <h1>Campus Community Hub</h1>
+    <h2>Connecting Students · Sharing Knowledge · Growing Together</h2>
+    <hr>
+
+    <div class="welcome-banner">
+      <div class="welcome-avatar">🎓</div>
+      <div class="welcome-text">
+        <h3>Welcome back! 👋</h3>
+        <p>Explore everything your campus has to offer below.</p>
+      </div>
+    </div>
+
+    <!-- ── Study Tools Strip ── -->
+    <div class="section-title"><span>🛠️ STUDY TOOLS</span></div>
+    <div class="tools-strip">
+      <div class="tool-chip" onclick="toggleTool('pomodoro', this)">
+        <span class="tc-icon">⏱️</span><span class="tc-label">Pomodoro</span>
+      </div>
+      <div class="tool-chip" onclick="toggleTool('quicknotes', this)">
+        <span class="tc-icon">📝</span><span class="tc-label">Quick Notes</span>
+      </div>
+      <div class="tool-chip" onclick="toggleTool('flashcards', this)">
+        <span class="tc-icon">🃏</span><span class="tc-label">Flashcards</span>
+      </div>
+      <div class="tool-chip" onclick="toggleTool('mood', this)">
+        <span class="tc-icon">🌈</span><span class="tc-label">Mood Log</span>
+      </div>
+    </div>
+
+    <!-- Pomodoro Panel -->
+    <div class="tool-panel list-card" id="pomodoro" style="text-align:center;">
+      <h3 style="color:var(--secondary);margin-bottom:6px;">⏱️ Pomodoro Timer</h3>
+      <p style="color:var(--text-sub);font-size:0.82rem;margin-bottom:20px;">Stay focused — 25 min work, 5 min break</p>
+      <div class="pomo-ring">
+        <div class="pomo-time" id="pomoTime">25:00</div>
+        <div class="pomo-label" id="pomoLabel">Work 💪</div>
+      </div>
+      <div class="pomo-btns">
+        <button onclick="pomoStart()" class="btn">▶ Start</button>
+        <button onclick="pomoPause()" class="btn btn-ghost">⏸ Pause</button>
+        <button onclick="pomoReset()" class="btn btn-ghost">↺ Reset</button>
+        <button onclick="pomoSkip()" class="btn btn-ghost">⏭ Skip</button>
+      </div>
+      <p id="pomoSession" style="margin-top:14px;font-size:0.78rem;color:var(--text-sub);">Session 1 of 4</p>
+    </div>
+
+    <!-- Quick Notes Panel -->
+    <div class="tool-panel list-card" id="quicknotes">
+      <h3 style="color:var(--secondary);margin:0 0 4px;">📝 Quick Notes</h3>
+      <p style="color:var(--text-sub);font-size:0.82rem;margin-bottom:12px;">Jot down tasks, ideas & reminders</p>
+      <div class="qn-tabs">
+        <button class="qn-tab active" onclick="switchQNTab('list', this)">📋 List</button>
+        <button class="qn-tab" onclick="switchQNTab('view', this)">👁️ View All</button>
+        <button class="qn-tab" onclick="switchQNTab('pending', this)">⏳ Pending</button>
+        <button class="qn-tab" onclick="switchQNTab('done', this)">✅ Done</button>
+      </div>
+      <div id="qnListWrap">
+        <div class="qn-list" id="qnList"></div>
+        <div class="qn-add">
+          <input type="text" id="qnInput" placeholder="Add a note or task..." maxlength="200">
+          <button onclick="addQN()" class="btn">Add</button>
+        </div>
+      </div>
+      <div class="qn-view-full" id="qnViewFull"></div>
+    </div>
+
+    <!-- Flashcards Panel -->
+    <div class="tool-panel list-card" id="flashcards" style="text-align:center;">
+      <h3 style="color:var(--secondary);margin-bottom:4px;">🃏 Flashcards</h3>
+      <p style="color:var(--text-sub);font-size:0.82rem;margin-bottom:16px;">Click the card to reveal the answer</p>
+      <div class="fc-card" id="fcCard" onclick="flipCard()">
+        <div class="fc-question" id="fcQ">Loading...</div>
+        <div class="fc-answer" id="fcA"></div>
+      </div>
+      <p style="font-size:0.72rem;color:var(--text-dim);margin-top:8px;" id="fcCounter"></p>
+      <div class="fc-nav">
+        <button onclick="fcPrev()" class="btn btn-ghost">← Prev</button>
+        <button onclick="fcNext()" class="btn">Next →</button>
+      </div>
+    </div>
+
+    <!-- Mood Panel -->
+    <div class="tool-panel list-card" id="mood">
+      <h3 style="color:var(--secondary);margin:0 0 4px;">🌈 Mood Tracker</h3>
+      <p style="color:var(--text-sub);font-size:0.82rem;">How are you feeling right now?</p>
+      <div class="mood-emojis">
+        <button class="mood-btn" onclick="logMood('😄 Energized')">😄</button>
+        <button class="mood-btn" onclick="logMood('🙂 Good')">🙂</button>
+        <button class="mood-btn" onclick="logMood('😐 Neutral')">😐</button>
+        <button class="mood-btn" onclick="logMood('😔 Tired')">😔</button>
+        <button class="mood-btn" onclick="logMood('😤 Stressed')">😤</button>
+      </div>
+      <div class="mood-log" id="moodLog"></div>
+    </div>
+
+    <!-- ── QUIZ SECTION ── -->
+    <div class="section-title" style="margin-top:10px;"><span>🧠 CAMPUS QUIZ</span></div>
+    <div class="list-card reveal">
+      <h3 style="color:var(--secondary);margin-bottom:6px;">Pick a Category</h3>
+      <p style="color:var(--text-sub);font-size:0.82rem;margin-bottom:18px;">Fresh questions every time — powered by Open Trivia DB</p>
+      <div class="quiz-cats">
+        <div class="quiz-cat-btn" onclick="startQuiz(17,'cs',this)">
+          <span class="quiz-cat-icon">💻</span>
+          <span class="quiz-cat-name">Computer Science</span>
+        </div>
+        <div class="quiz-cat-btn" onclick="startQuiz(19,'math',this)">
+          <span class="quiz-cat-icon">🧮</span>
+          <span class="quiz-cat-name">Mathematics</span>
+        </div>
+        <div class="quiz-cat-btn" onclick="startQuiz(17,'science',this)">
+          <span class="quiz-cat-icon">🔬</span>
+          <span class="quiz-cat-name">Science</span>
+        </div>
+        <div class="quiz-cat-btn" onclick="startQuiz(9,'gk',this)">
+          <span class="quiz-cat-icon">🌍</span>
+          <span class="quiz-cat-name">General Knowledge</span>
+        </div>
+      </div>
+
+      <div class="quiz-area" id="quizArea">
+        <div class="quiz-loading" id="quizLoading">⏳ Loading fresh questions...</div>
+        <div id="quizGame" style="display:none;">
+          <div class="quiz-meta">
+            <span id="quizCatLabel"></span>
+            <span class="quiz-score-badge">🏆 Score: <span id="quizScore">0</span> / <span id="quizTotal">0</span></span>
+          </div>
+          <div class="quiz-progress"><div class="quiz-progress-bar" id="quizBar"></div></div>
+          <div class="quiz-q-card">
+            <div class="quiz-question" id="quizQuestion"></div>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div class="quiz-feedback" id="quizFeedback"></div>
+          </div>
+          <button class="btn quiz-next" id="quizNext" onclick="nextQuestion()">Next Question →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Main Menu ── -->
+    <div class="section-title"><span>DO WHAT YOU LOVE ❤️</span></div>
+    <div class="menu-container">
+      <div class="menu-box"><a href="notes.html"><span class="menu-icon">🚀</span>Notes</a></div>
+      <div class="menu-box"><a href="events.html"><span class="menu-icon">🎊</span>Events</a></div>
+      <div class="menu-box"><a href="bookexchange.html"><span class="menu-icon">🔖</span>Book Exchange</a></div>
+      <div class="menu-box"><a href="blooddonation.html"><span class="menu-icon">💉</span>Blood Donation</a></div>
+      <div class="menu-box"><a href="lostfound.html"><span class="menu-icon">🔍</span>Lost &amp; Found</a></div>
+      <div class="menu-box"><a href="clubs.html"><span class="menu-icon">🎭</span>Clubs</a></div>
+      <div class="menu-box"><a href="academiccalendar.html"><span class="menu-icon">🗓️</span>Calendar 2026</a></div>
+      <div class="menu-box"><a href="teacherscabin.html"><span class="menu-icon">🧑‍🏫</span>Teachers' Cabin</a></div>
+      <div class="menu-box"><a href="gallery.html"><span class="menu-icon">🖼️</span>Gallery</a></div>
+      <div class="menu-box"><a href="contact.html"><span class="menu-icon">📡</span>Contact</a></div>
+    </div>
+
+    <div class="inspire-card reveal">
+      <p>"Alone we can do so little; together we can do so much." — Helen Keller</p>
+      <p style="margin-top: 10px;">"The beautiful thing about learning is that no one can take it away from you." — B.B. King</p>
+      <div class="inspire-author">Dream big · Stay curious · Keep growing 🌱</div>
+    </div>
+
+    <div class="footer">
+      <p>© 2026 Campus Community Hub &nbsp;·&nbsp; Built with ❤️ by Rajgopal C</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    // ── Tool toggle ──
+    const allPanels = ['pomodoro','quicknotes','flashcards','mood'];
+    function toggleTool(id, chip) {
+      const el = document.getElementById(id);
+      const isOpen = el.classList.contains('open');
+      allPanels.forEach(p => document.getElementById(p).classList.remove('open'));
+      document.querySelectorAll('.tool-chip').forEach(c => c.classList.remove('active'));
+      if (!isOpen) { el.classList.add('open'); chip.classList.add('active'); }
+    }
+
+    // ── Pomodoro ──
+    let pomoSecs = 25*60, pomoRunning = false, pomoInterval = null;
+    let pomoPhase = 'work', pomoSession = 1;
+    const pomoPhases = { work:25*60, shortBreak:5*60, longBreak:15*60 };
+    function pomoTick() { if (pomoSecs<=0){pomoNextPhase();return;} pomoSecs--; updatePomo(); }
+    function updatePomo() {
+      const m=String(Math.floor(pomoSecs/60)).padStart(2,'0');
+      const s=String(pomoSecs%60).padStart(2,'0');
+      document.getElementById('pomoTime').textContent=m+':'+s;
+    }
+    function pomoStart() { if(pomoRunning)return; pomoRunning=true; pomoInterval=setInterval(pomoTick,1000); }
+    function pomoPause() { clearInterval(pomoInterval); pomoRunning=false; }
+    function pomoReset() { pomoPause(); pomoSecs=pomoPhases[pomoPhase]; updatePomo(); }
+    function pomoSkip()  { pomoPause(); pomoNextPhase(); }
+    function pomoNextPhase() {
+      if(pomoPhase==='work'){pomoSession++; pomoPhase=pomoSession%4===0?'longBreak':'shortBreak';}
+      else pomoPhase='work';
+      pomoSecs=pomoPhases[pomoPhase];
+      const labels={work:'Work 💪',shortBreak:'Short Break ☕',longBreak:'Long Break 🌿'};
+      document.getElementById('pomoLabel').textContent=labels[pomoPhase];
+      document.getElementById('pomoSession').textContent=`Session ${Math.ceil(pomoSession/2)} of 4`;
+      updatePomo();
+      if(pomoRunning){clearInterval(pomoInterval);pomoInterval=setInterval(pomoTick,1000);}
+    }
+
+    // ── Quick Notes ──
+    let qnItems = JSON.parse(localStorage.getItem('cch_qn')||'[]');
+    let qnCurrentTab = 'list';
+
+    function switchQNTab(tab, btn) {
+      qnCurrentTab = tab;
+      document.querySelectorAll('.qn-tab').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      const listWrap = document.getElementById('qnListWrap');
+      const viewFull = document.getElementById('qnViewFull');
+      if (tab === 'view') {
+        listWrap.style.display='none'; viewFull.classList.add('open');
+        renderQNView('all');
+      } else if (tab === 'pending') {
+        listWrap.style.display='none'; viewFull.classList.add('open');
+        renderQNView('pending');
+      } else if (tab === 'done') {
+        listWrap.style.display='none'; viewFull.classList.add('open');
+        renderQNView('done');
+      } else {
+        listWrap.style.display=''; viewFull.classList.remove('open');
+        renderQN();
+      }
+    }
+
+    function renderQNView(filter) {
+      const vf = document.getElementById('qnViewFull');
+      let items = qnItems;
+      if (filter==='pending') items = qnItems.filter(n=>!n.done);
+      if (filter==='done')    items = qnItems.filter(n=>n.done);
+      if (!items.length) { vf.innerHTML = `<p style="text-align:center;color:var(--text-sub);">No notes here yet!</p>`; return; }
+      vf.innerHTML = items.map((item,i) => {
+        const idx = qnItems.indexOf(item);
+        return `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span>${item.done?'✅':'🔲'}</span>
+          <span style="flex:1;${item.done?'text-decoration:line-through;opacity:0.5':''}">${item.text}</span>
+          <span style="font-size:0.7rem;color:var(--text-dim);flex-shrink:0;">${item.time||''}</span>
+          <button onclick="delQN(${idx})" style="background:none;border:none;color:var(--primary);cursor:pointer;opacity:0.5;font-size:0.85rem;" title="Delete">🗑️</button>
+        </div>`;
+      }).join('');
+    }
+
+    function renderQN() {
+      const list = document.getElementById('qnList');
+      list.innerHTML = qnItems.length ? qnItems.map((item,i)=>`
+        <div class="qn-item${item.done?' done':''}">
+          <input type="checkbox" ${item.done?'checked':''} onchange="toggleQN(${i})">
+          <span class="qn-text">${item.text}</span>
+          <span class="qn-time">${item.time||''}</span>
+          <button class="del-qn" onclick="delQN(${i})">🗑️</button>
+        </div>`).join('')
+        : '<p style="text-align:center;color:var(--text-sub);font-size:0.85rem;padding:16px 0;">No notes yet. Add one below!</p>';
+    }
+    function addQN() {
+      const inp = document.getElementById('qnInput');
+      if(!inp.value.trim()) return;
+      const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      qnItems.unshift({text:inp.value.trim(),done:false,time:now});
+      inp.value=''; saveQN(); renderQN();
+    }
+    function toggleQN(i){qnItems[i].done=!qnItems[i].done;saveQN();renderQN();}
+    function delQN(i){qnItems.splice(i,1);saveQN();renderQN();if(qnCurrentTab!=='list')renderQNView(qnCurrentTab);}
+    function saveQN(){localStorage.setItem('cch_qn',JSON.stringify(qnItems));}
+    document.getElementById('qnInput').addEventListener('keypress',e=>{if(e.key==='Enter')addQN();});
+    renderQN();
+
+    // ── Flashcards ──
+    const fcData=[
+      {q:'What does CPU stand for?',a:'Central Processing Unit'},
+      {q:'What is the time complexity of Binary Search?',a:'O(log n)'},
+      {q:'What is Ohm\'s Law?',a:'V = I × R'},
+      {q:'What does RAM stand for?',a:'Random Access Memory'},
+      {q:'Powerhouse of the cell?',a:'Mitochondria'},
+      {q:'What year was Python created?',a:'1991, by Guido van Rossum'},
+      {q:'What does HTML stand for?',a:'HyperText Markup Language'},
+      {q:'Newton\'s Second Law?',a:'F = m × a'},
+      {q:'What is the speed of light?',a:'≈ 3 × 10⁸ m/s'},
+      {q:'What is photosynthesis?',a:'Process by which plants convert sunlight into food using CO₂ and water'},
+    ];
+    let fcIdx=0,fcFlipped=false;
+    function renderFC(){
+      document.getElementById('fcQ').textContent=fcData[fcIdx].q;
+      document.getElementById('fcA').textContent=fcData[fcIdx].a;
+      document.getElementById('fcCounter').textContent=`Card ${fcIdx+1} of ${fcData.length}`;
+      document.getElementById('fcCard').classList.remove('flipped'); fcFlipped=false;
+    }
+    function flipCard(){document.getElementById('fcCard').classList.toggle('flipped');fcFlipped=!fcFlipped;}
+    function fcNext(){fcIdx=(fcIdx+1)%fcData.length;renderFC();}
+    function fcPrev(){fcIdx=(fcIdx-1+fcData.length)%fcData.length;renderFC();}
+    renderFC();
+
+    // ── Mood Log ──
+    let moodLog=JSON.parse(localStorage.getItem('cch_mood')||'[]');
+    function logMood(mood){
+      const now=new Date();
+      moodLog.unshift({mood,time:now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),date:now.toLocaleDateString()});
+      if(moodLog.length>30)moodLog.pop();
+      localStorage.setItem('cch_mood',JSON.stringify(moodLog));
+      renderMood();
+    }
+    function renderMood(){
+      const log=document.getElementById('moodLog');
+      log.innerHTML=moodLog.length
+        ?moodLog.map(m=>`<div class="mood-entry">${m.mood} — ${m.date} ${m.time}</div>`).join('')
+        :'<div class="mood-entry" style="text-align:center;">Pick a mood above to start logging! 😊</div>';
+    }
+    renderMood();
+
+    // ── QUIZ ──
+    // Open Trivia DB: cat 17=Science&Nature, 19=Math, 9=GK, 18=Computers
+    const quizCategoryMap = { cs:18, math:19, science:17, gk:9 };
+    const quizCategoryNames = { cs:'💻 Computer Science', math:'🧮 Mathematics', science:'🔬 Science', gk:'🌍 General Knowledge' };
+    let quizQuestions=[], quizIdx=0, quizScore=0, quizCurrentCat='';
+
+    function decodeHTML(str){
+      const txt=document.createElement('textarea'); txt.innerHTML=str; return txt.value;
+    }
+
+    async function startQuiz(ignored, catKey, btn) {
+      document.querySelectorAll('.quiz-cat-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      quizCurrentCat=catKey;
+      quizIdx=0; quizScore=0;
+      const area=document.getElementById('quizArea');
+      area.classList.add('open');
+      document.getElementById('quizLoading').style.display='block';
+      document.getElementById('quizGame').style.display='none';
+      const catId=quizCategoryMap[catKey];
+      try {
+        const res=await fetch(`https://opentdb.com/api.php?amount=10&category=${catId}&type=multiple`);
+        const data=await res.json();
+        if(!data.results||!data.results.length) throw new Error('No questions');
+        quizQuestions=data.results.map(q=>({
+          question: decodeHTML(q.question),
+          correct: decodeHTML(q.correct_answer),
+          options: shuffle([q.correct_answer,...q.incorrect_answers].map(decodeHTML))
+        }));
+      } catch(e) {
+        document.getElementById('quizLoading').textContent='⚠️ Could not load questions. Check your connection.';
+        return;
+      }
+      document.getElementById('quizLoading').style.display='none';
+      document.getElementById('quizGame').style.display='block';
+      document.getElementById('quizCatLabel').textContent=quizCategoryNames[catKey];
+      document.getElementById('quizTotal').textContent=quizQuestions.length;
+      renderQuizQ();
+    }
+
+    function shuffle(arr){return arr.sort(()=>Math.random()-0.5);}
+
+    function renderQuizQ(){
+      if(quizIdx>=quizQuestions.length){showQuizEnd();return;}
+      const q=quizQuestions[quizIdx];
+      document.getElementById('quizScore').textContent=quizScore;
+      document.getElementById('quizQuestion').textContent=`Q${quizIdx+1}. ${q.question}`;
+      document.getElementById('quizBar').style.width=(quizIdx/quizQuestions.length*100)+'%';
+      const opts=document.getElementById('quizOptions');
+      opts.innerHTML=q.options.map(opt=>`
+        <div class="quiz-opt" onclick="answerQuiz(this,'${opt.replace(/'/g,"\\'")}')">
+          <span>${opt}</span>
+        </div>`).join('');
+      const fb=document.getElementById('quizFeedback');
+      fb.className='quiz-feedback'; fb.textContent='';
+      document.getElementById('quizNext').className='btn quiz-next';
+    }
+
+    function answerQuiz(el, chosen){
+      const q=quizQuestions[quizIdx];
+      const opts=document.querySelectorAll('.quiz-opt');
+      opts.forEach(o=>{
+        o.classList.add('locked');
+        if(o.textContent.trim()===q.correct) o.classList.add('correct');
+      });
+      const fb=document.getElementById('quizFeedback');
+      if(chosen===q.correct){
+        quizScore++;
+        document.getElementById('quizScore').textContent=quizScore;
+        el.classList.add('correct');
+        fb.textContent='🎉 Correct! Well done!';
+        fb.className='quiz-feedback show ok';
+      } else {
+        el.classList.add('wrong');
+        fb.textContent=`❌ Incorrect. The answer is: ${q.correct}`;
+        fb.className='quiz-feedback show bad';
+      }
+      document.getElementById('quizNext').className='btn quiz-next show';
+    }
+
+    function nextQuestion(){quizIdx++;renderQuizQ();}
+
+    function showQuizEnd(){
+      document.getElementById('quizBar').style.width='100%';
+      const pct=Math.round(quizScore/quizQuestions.length*100);
+      const grade=pct>=80?'🏆 Excellent!':pct>=60?'👍 Good Job!':pct>=40?'📚 Keep Studying!':'💪 Try Again!';
+      document.getElementById('quizQuestion').textContent=`Quiz Complete! ${grade}`;
+      document.getElementById('quizOptions').innerHTML=`
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:3rem;margin-bottom:12px;">${pct>=80?'🏆':pct>=60?'⭐':'📖'}</div>
+          <div style="font-family:var(--font-heading);font-size:1.3rem;font-weight:800;color:var(--secondary);">${quizScore} / ${quizQuestions.length}</div>
+          <div style="color:var(--text-sub);font-size:0.85rem;margin-top:6px;">${pct}% accuracy</div>
+          <button onclick="startQuiz(null,'${quizCurrentCat}',document.querySelector('.quiz-cat-btn.selected'))" class="btn" style="margin-top:20px;">🔄 Play Again</button>
+        </div>`;
+      document.getElementById('quizFeedback').className='quiz-feedback';
+      document.getElementById('quizNext').className='btn quiz-next';
+    }
+  </script>
+</body>
+</html>

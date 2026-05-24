@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clubs | Campus Community Hub</title>
+  <link rel="stylesheet" href="m.css">
+  <style>
+    .club-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px 18px;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+    }
+    .club-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s var(--ease-out);
+    }
+    .club-card:hover::before { transform: scaleX(1); }
+    .club-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-bright);
+      transform: translateY(-5px);
+      box-shadow: 0 14px 40px -8px var(--secondary-glow);
+    }
+    .club-icon { font-size: 2.2rem; display: block; margin-bottom: 10px; transition: transform 0.4s var(--ease-spring); }
+    .club-card:hover .club-icon { transform: scale(1.2) rotate(5deg); }
+    .club-name { font-family: var(--font-heading); font-weight: 700; font-size: 0.95rem; color: var(--text-main); margin-bottom: 5px; }
+    .club-year { font-size: 0.75rem; color: var(--text-sub); }
+    .clubs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>🎭 Campus Clubs</h1>
+    <h2>Your college life is incomplete without a club story — lead, learn, and grow!</h2>
+    <hr>
+
+    <div class="search-bar-wrap" style="margin-bottom: 0;">
+      <input type="text" id="club-search" placeholder="Search clubs...">
+    </div>
+
+    <div class="clubs-grid" id="clubs-grid">
+      <div class="club-card"><span class="club-icon">❤️</span><div class="club-name">Kannada Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎤</span><div class="club-name">TEDx Society</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">✨</span><div class="club-name">Groomed & Gracious</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎭</span><div class="club-name">Theatrical Society</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">📊</span><div class="club-name">Data Science Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🌌</span><div class="club-name">Cosmic Crew</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🌾</span><div class="club-name">Harvest Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">⚙️</span><div class="club-name">Go Ops (DevOps)</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">⚡</span><div class="club-name">Electro-Nirman</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎨</span><div class="club-name">Graphics & Animation</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">📈</span><div class="club-name">Aarohan Finance</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">💡</span><div class="club-name">Next Gen Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🏃</span><div class="club-name">Sports Committee</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🌍</span><div class="club-name">NSS Unit</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🤝</span><div class="club-name">Leo Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">📻</span><div class="club-name">Ham Radio Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">👾</span><div class="club-name">Google Devs (GDSC)</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🖌️</span><div class="club-name">Art & Sketch Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🤖</span><div class="club-name">AI & Tech Society</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎬</span><div class="club-name">Film Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">📣</span><div class="club-name">Marketing Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">💼</span><div class="club-name">E-Cell (Entrepreneur)</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🧬</span><div class="club-name">GenAI Explorers</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🔒</span><div class="club-name">Hackeye CyberSec</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎮</span><div class="club-name">Gaming Guild</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">💃</span><div class="club-name">Dance Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">📸</span><div class="club-name">Photography Club</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">👠</span><div class="club-name">Fashion & Design</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎙️</span><div class="club-name">Speakers & Anchors</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">💻</span><div class="club-name">Omega Coding</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🎵</span><div class="club-name">Music Society</div><div class="club-year">2025–2026</div></div>
+      <div class="club-card"><span class="club-icon">🌱</span><div class="club-name">Pragya E-Cell</div><div class="club-year">Incubator Hub</div></div>
+    </div>
+
+    <hr style="margin-top: 50px;">
+
+    <div class="list-card reveal" style="max-width: 420px; margin: 30px auto; text-align: center; background: rgba(124,111,255,0.06); border-color: rgba(124,111,255,0.2);">
+      <h3 style="color: var(--secondary); margin-top: 0;">📲 Scan to Join Kannada Club</h3>
+      <div style="background: rgba(255,255,255,0.05); padding: 16px; border-radius: var(--radius-md); display: inline-block; border: 1px solid var(--border);">
+        <img src="kannada.jpg" alt="Kannada Club QR Code" style="max-width: 200px; height: auto; display: block; border-radius: var(--radius-sm);">
+      </div>
+      <p style="margin-top: 14px; font-size: 0.85rem;">Scan with your phone to join the official workspace.</p>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.getElementById('club-search').addEventListener('input', function () {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.club-card').forEach(c => {
+        c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+    // stagger club cards
+    document.querySelectorAll('.club-card').forEach((c,i) => {
+      c.style.animation = `fadeInUp 0.4s ${0.03 * i}s var(--ease-out) both`;
+    });
+  </script>
+</body>
+</html>

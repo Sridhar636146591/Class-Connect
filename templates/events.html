@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+  <style>
+    .delete-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,92,92,0.12);
+      border: 1px solid rgba(255,92,92,0.3);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      font-family: var(--font-heading);
+    }
+    .delete-btn:hover {
+      background: rgba(255,92,92,0.25);
+      border-color: var(--primary);
+      transform: scale(1.04);
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>🎉 Campus Events</h1>
+    <h2>Discover what's happening — or host something new</h2>
+    <hr>
+
+    <!-- POST EVENT FORM -->
+    <div class="list-card reveal" style="max-width: 580px; margin: 0 auto 36px; background: rgba(139,92,246,0.06); border-color: rgba(139,92,246,0.2);">
+      <h3 style="color: var(--secondary); text-align: center; border-color: rgba(139,92,246,0.15); font-size: 1.2rem;">🗓️ Host an Event</h3>
+      <form action="/add_event" method="post" style="margin: 0;">
+        <label>Event Title</label>
+        <input type="text" name="title" placeholder="e.g. Annual Hackathon 2026" required style="max-width: 100%;">
+
+        <label>Event Date</label>
+        <input type="date" name="date" required style="max-width: 100%;">
+
+        <label>Description</label>
+        <textarea name="description" rows="3" placeholder="What's the event about? Venue, agenda, guidelines..." required style="max-width: 100%; resize: none;"></textarea>
+
+        <label>Organizer Contact</label>
+        <input type="text" name="contact" placeholder="club@campus.edu or phone number" required style="max-width: 100%;">
+
+        <div style="margin-top: 20px; text-align: center;">
+          <button type="submit" style="width: 100%; background: linear-gradient(135deg, var(--secondary), var(--accent));">
+            Post Event 🎉
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="section-title"><span>📅 Upcoming Events</span></div>
+
+    <!-- SEARCH -->
+    <div class="search-bar-wrap">
+      <input type="text" id="live-search" placeholder="Search events...">
+    </div>
+
+    <div class="list-container">
+      {% for e in events %}
+        <div class="list-card" data-searchable>
+          <h3>🎉 {{ e.title }}</h3>
+          <span class="badge badge-secondary" style="margin-bottom: 12px; display: inline-block;">🗓️ {{ e.date }}</span>
+          <p>{{ e.description }}</p>
+          <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <span style="font-size: 0.83rem; color: var(--text-sub);">
+              <strong style="color: var(--text-main);">📞 Organizer:</strong> {{ e.contact }}
+            </span>
+            <form action="/delete_event/{{ loop.index0 }}" method="post" onsubmit="return confirm('Delete this event?');" style="margin:0;">
+              <button type="submit" class="delete-btn">🗑️ Delete</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-center" style="grid-column: 1 / -1; color: var(--text-sub); font-style: italic; padding: 30px 0;">
+          No events yet. Be the first to post one! 🚀
+        </p>
+      {% endfor %}
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

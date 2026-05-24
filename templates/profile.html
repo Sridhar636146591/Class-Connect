@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+</head>
+<body>
+  <div class="container" style="max-width: 560px;">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>👤 My Profile</h1>
+    <h2>Your campus digital identity</h2>
+    <hr>
+
+    <div class="profile-card reveal">
+      <div class="profile-avatar">🎓</div>
+      <h3 style="text-align: center; font-size: 1.5rem; color: var(--text-main); margin-bottom: 4px;">{{ user.username }}</h3>
+      <p style="text-align: center; margin-bottom: 22px;">
+        <span class="badge badge-secondary">{{ user.department }}</span>
+      </p>
+
+      <div class="profile-row">
+        <div class="profile-field">
+          <div class="label">Email</div>
+          <div class="value">{{ user.email }}</div>
+        </div>
+        <div class="profile-field">
+          <div class="label">Gender</div>
+          <div class="value">{{ user.gender or '—' }}</div>
+        </div>
+        <div class="profile-field">
+          <div class="label">Class / Year</div>
+          <div class="value">{{ user.classyear or '—' }}</div>
+        </div>
+        <div class="profile-field">
+          <div class="label">Department</div>
+          <div class="value">{{ user.department or '—' }}</div>
+        </div>
+      </div>
+
+      {% if user.bio %}
+      <div style="margin-top: 20px; padding: 16px 20px; background: rgba(124,111,255,0.07); border-radius: var(--radius-sm); border-left: 3px solid var(--secondary);">
+        <div style="font-family: var(--font-heading); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 6px;">Bio</div>
+        <p style="margin: 0; font-style: italic; font-size: 0.9rem; line-height: 1.6;">"{{ user.bio }}"</p>
+      </div>
+      {% endif %}
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+      <a href="/edit_profile" class="btn">✏️ Edit Profile</a>
+      <a href="/logout" class="btn btn-danger">🚪 Logout</a>
+      <a href="/main.html" class="btn btn-ghost">⬅ Back</a>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

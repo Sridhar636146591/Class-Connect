@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+  <style>
+    .delete-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,92,92,0.12);
+      border: 1px solid rgba(255,92,92,0.3);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font-heading);
+    }
+    .delete-btn:hover {
+      background: rgba(255,92,92,0.25);
+      border-color: var(--primary);
+      transform: scale(1.04);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>📘 Academic Notes</h1>
+    <h2>Share materials, access lecture notes, and grow together</h2>
+    <hr>
+
+    <!-- UPLOAD FORM -->
+    <div class="list-card reveal" style="max-width: 580px; margin: 0 auto 36px; background: rgba(124,111,255,0.06); border-color: rgba(124,111,255,0.2);">
+      <h3 style="color: var(--secondary); text-align: center; font-size: 1.2rem; border-color: rgba(124,111,255,0.15);">📤 Upload Study Notes</h3>
+      <form action="/upload_notes" method="post" enctype="multipart/form-data" style="margin: 0;">
+        <label>Document Name / Course</label>
+        <input type="text" name="title" placeholder="e.g. Computer Networks — Lecture 1" required style="max-width: 100%;">
+
+        <label>Description</label>
+        <textarea name="description" rows="3" placeholder="Brief summary — topics, unit, author..." required style="max-width: 100%; resize: none;"></textarea>
+
+        <label>Select File (.pdf, .doc, .docx)</label>
+        <input type="file" name="file" accept=".pdf,.doc,.docx" required style="max-width: 100%;">
+
+        <div style="margin-top: 20px; text-align: center;">
+          <button type="submit" style="width: 100%;">Upload Document 📤</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="section-title"><span>📚 Academic Catalog</span></div>
+
+    <div class="search-bar-wrap">
+      <input type="text" id="live-search" placeholder="Search notes...">
+    </div>
+
+    <div class="list-container">
+      {% for note in notes %}
+        <div class="list-card" data-searchable>
+          <h3>📘 {{ note.title }}</h3>
+          <p>{{ note.description }}</p>
+          <div style="margin-top: 18px; display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 10px;">
+            <span class="badge badge-accent">📂 {{ note.file_type }}</span>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <a href="{{ note.file_path }}" target="_blank" class="btn" style="padding: 8px 16px; font-size: 0.82rem; background: linear-gradient(135deg, var(--secondary), var(--accent));">
+                View 👁️
+              </a>
+              <form action="/delete_note/{{ loop.index0 }}" method="post" onsubmit="return confirm('Delete this note?');" style="margin:0;">
+                <button type="submit" class="delete-btn">🗑️ Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-center" style="grid-column: 1 / -1; color: var(--text-sub); font-style: italic; padding: 30px 0;">
+          No notes uploaded yet. Be the first to share! 📘
+        </p>
+      {% endfor %}
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

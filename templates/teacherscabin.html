@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teachers' Cabin | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>👩‍🏫 Teachers' Cabin</h1>
+    <h2>Locate faculty, find cabin numbers, and get in touch</h2>
+    <hr>
+
+    <div class="list-card reveal" style="max-width: 560px; margin: 0 auto 36px; background: rgba(124,111,255,0.04); border-color: rgba(124,111,255,0.2); border-top: 3px solid var(--secondary);">
+      <h3 style="color: var(--secondary); text-align: center; font-size: 1.2rem; border-color: rgba(124,111,255,0.15);">➕ Add Faculty Info</h3>
+      <form action="/add_teacher" method="post" style="margin: 0;">
+        <label>Teacher Name</label>
+        <input type="text" name="name" placeholder="Prof. Dr. Jane Smith" required style="max-width: 100%;">
+
+        <label>Department</label>
+        <input type="text" name="department" placeholder="e.g. Computer Science" required style="max-width: 100%;">
+
+        <label>Cabin Number</label>
+        <input type="text" name="cabin" placeholder="e.g. Block A — Room 204" required style="max-width: 100%;">
+
+        <label>Contact / Email</label>
+        <input type="text" name="contact" placeholder="faculty@campus.edu" required style="max-width: 100%;">
+
+        <button type="submit" style="width: 100%; margin-top: 18px;">
+          Add Teacher 👩‍🏫
+        </button>
+      </form>
+    </div>
+
+    <div class="section-title"><span>📋 Faculty Directory</span></div>
+
+    <div class="search-bar-wrap">
+      <input type="text" id="live-search" placeholder="Search faculty or department...">
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Cabin</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in teachers %}
+          <tr>
+            <td style="color: var(--text-main); font-weight: 600; white-space: nowrap;">👩‍🏫 {{ t.name }}</td>
+            <td><span class="badge badge-secondary">{{ t.department }}</span></td>
+            <td style="color: var(--accent);">{{ t.cabin }}</td>
+            <td><a href="mailto:{{ t.contact }}" style="color: var(--secondary);">{{ t.contact }}</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" style="text-align: center; padding: 28px; color: var(--text-sub); font-style: italic;">No faculty added yet. Help your peers — add teacher info!</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+  <script>
+    const si = document.getElementById('live-search');
+    if (si) {
+      si.addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('tbody tr').forEach(row => {
+          row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+      });
+    }
+  </script>
+</body>
+</html>

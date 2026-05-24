@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | Campus Community Hub</title>
+  <link rel="stylesheet" href="m.css">
+  <style>
+    label { text-align: left; }
+    input, select, textarea { max-width: 100%; }
+    .progress-dots {
+      display: flex; gap: 8px; justify-content: center; margin-bottom: 28px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border-bright);
+      transition: var(--transition);
+    }
+    .dot.active { background: var(--secondary); box-shadow: 0 0 8px var(--secondary-glow); }
+  </style>
+</head>
+<body>
+  <div class="container" style="max-width: 640px;">
+    <h1>Create Account ✨</h1>
+    <h2>Join the Campus Community Hub</h2>
+    <div class="progress-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+
+    <div class="list-card" style="background: rgba(124,111,255,0.05); border-color: rgba(124,111,255,0.2); padding: 32px;">
+      <form action="/signup" method="POST">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px;">
+          <div>
+            <label>Full Name</label>
+            <input type="text" name="username" placeholder="John Doe" required>
+          </div>
+          <div>
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="email@campus.edu" required>
+          </div>
+          <div>
+            <label>Password</label>
+            <input type="password" name="password" id="pw" placeholder="Min 6 characters" required>
+          </div>
+          <div>
+            <label>Confirm Password</label>
+            <input type="password" name="confirmpassword" id="cpw" placeholder="Re-enter password" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 20px;">
+          <div>
+            <label>Gender</label>
+            <select name="gender" required>
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label>Class / Year</label>
+            <input type="text" name="classyear" placeholder="e.g. 2nd Year CSE" required>
+          </div>
+          <div>
+            <label>Department</label>
+            <input type="text" name="department" placeholder="e.g. Computer Science" required>
+          </div>
+        </div>
+
+        <label>Short Bio</label>
+        <textarea name="bio" rows="3" placeholder="Tell the community something about yourself..." style="max-width: 100%; resize: none;"></textarea>
+
+        <div id="pw-match-msg" style="text-align: center; font-size: 0.82rem; min-height: 18px; margin: 4px 0;"></div>
+
+        <div style="text-align: center; margin-top: 20px;">
+          <input type="submit" value="Create Account →" style="max-width: 340px; width: 100%; padding: 14px; font-size: 1rem;">
+        </div>
+      </form>
+    </div>
+
+    <p style="text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--text-sub);">
+      Already a member? <a href="login.html" style="color: var(--secondary); font-weight: 600;">Sign in →</a>
+    </p>
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const pw = document.getElementById('pw');
+    const cpw = document.getElementById('cpw');
+    const msg = document.getElementById('pw-match-msg');
+    cpw.addEventListener('input', () => {
+      if (!cpw.value) { msg.textContent = ''; return; }
+      if (pw.value === cpw.value) {
+        msg.textContent = '✓ Passwords match';
+        msg.style.color = 'var(--accent)';
+      } else {
+        msg.textContent = '✗ Passwords do not match';
+        msg.style.color = 'var(--primary)';
+      }
+    });
+  </script>
+</body>
+</html>

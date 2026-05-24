@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery | Campus Community Hub</title>
+  <link rel="stylesheet" href="m.css">
+  <style>
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+    .gallery-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      aspect-ratio: 4/3;
+      background: var(--bg-card);
+      transition: var(--transition);
+      animation: fadeInUp 0.5s var(--ease-out) both;
+    }
+    .gallery-item:hover {
+      transform: scale(1.03);
+      border-color: var(--border-bright);
+      box-shadow: 0 14px 40px -8px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s var(--ease-out);
+      filter: brightness(0.9) saturate(1.1);
+    }
+    .gallery-item:hover img { transform: scale(1.08); filter: brightness(1) saturate(1.2); }
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,12,26,0.7) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      display: flex; align-items: flex-end;
+      padding: 14px;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+    .overlay-text { font-family: var(--font-heading); font-size: 0.8rem; font-weight: 700; color: #fff; }
+
+    /* Lightbox */
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(12px); }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: var(--radius-md); box-shadow: 0 0 80px rgba(0,0,0,0.8); }
+    .lightbox-close { position: absolute; top: 24px; right: 28px; font-size: 2rem; color: #fff; cursor: pointer; opacity: 0.7; transition: opacity 0.2s; }
+    .lightbox-close:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>🖼️ Campus Gallery</h1>
+    <h2>Capturing vibrant moments, achievements, and events of our community</h2>
+    <hr>
+
+    <div class="gallery-grid">
+      <div class="gallery-item" onclick="openLightbox('1.jpeg','Campus Life')">
+        <img src="1.jpeg" alt="Campus 1" loading="lazy">
+        <div class="overlay"><span class="overlay-text">Campus Life</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('2.jpeg','Campus Events')">
+        <img src="2.jpeg" alt="Campus 2" loading="lazy">
+        <div class="overlay"><span class="overlay-text">Campus Events</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('3.jpeg','Student Activities')">
+        <img src="3.jpeg" alt="Campus 3" loading="lazy">
+        <div class="overlay"><span class="overlay-text">Student Activities</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('4.jpeg','Workshops')">
+        <img src="4.jpeg" alt="Campus 4" loading="lazy">
+        <div class="overlay"><span class="overlay-text">Workshops</span></div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('5.jpeg','Community')">
+        <img src="5.jpeg" alt="Campus 5" loading="lazy">
+        <div class="overlay"><span class="overlay-text">Community</span></div>
+      </div>
+    </div>
+
+    <hr style="margin-top: 44px;">
+
+    <div class="list-card reveal" style="max-width: 480px; margin: 0 auto; text-align: center; background: rgba(124,111,255,0.05);">
+      <h3 style="color: var(--secondary); margin-top: 0;">📷 Share a Memory</h3>
+      <p style="margin-bottom: 20px;">Have a snapshot of a campus event? Share it with the community!</p>
+      <form action="#" method="POST" enctype="multipart/form-data">
+        <input type="file" name="gallery_image" accept="image/*" required style="max-width: 100%; border-style: dashed; margin-bottom: 0;">
+        <button type="submit" style="margin-top: 16px; width: 100%;">Upload Photo 📸</button>
+      </form>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    function openLightbox(src, label) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === e.currentTarget || e.target.className === 'lightbox-close') closeLightbox();
+    });
+    document.querySelector('#lightbox img').addEventListener('click', e => e.stopPropagation());
+  </script>
+</body>
+</html>

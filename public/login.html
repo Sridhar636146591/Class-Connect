@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | Campus Community Hub</title>
+  <link rel="stylesheet" href="m.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-card {
+      width: 92%; max-width: 440px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 44px 40px;
+      backdrop-filter: blur(28px);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.55), 0 0 60px -20px var(--secondary-glow);
+      animation: containerReveal 0.8s var(--ease-out) both;
+      position: relative; overflow: hidden;
+    }
+    .auth-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--secondary), var(--accent), var(--primary));
+    }
+    .auth-icon {
+      width: 58px; height: 58px;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 22px;
+      box-shadow: 0 0 0 3px rgba(124,111,255,0.25), 0 0 25px -5px var(--secondary-glow);
+    }
+    .auth-card h1 { font-size: 1.7rem; margin-bottom: 6px; }
+    label { text-align: left; }
+    input[type="email"], input[type="password"] { max-width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="auth-card">
+    <div class="auth-icon">🔐</div>
+    <h1>Welcome Back</h1>
+    <h2 style="margin-bottom: 28px;">Sign in to Campus Hub</h2>
+
+    <form action="/login" method="POST">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="you@campus.edu" required>
+
+      <label for="password" style="margin-top: 14px;">Password</label>
+      <input type="password" id="password" name="password" placeholder="••••••••" required>
+
+      <div style="margin-top: 24px;">
+        <input type="submit" value="Sign In →" style="width: 100%; max-width: 100%; padding: 14px; font-size: 1rem;">
+      </div>
+    </form>
+
+    <p style="text-align: center; margin-top: 22px; font-size: 0.88rem; color: var(--text-sub);">
+      Don't have an account?
+      <a href="reg.html" style="color: var(--secondary); font-weight: 600;">Create one →</a>
+    </p>
+    <p style="text-align: center; margin-top: 8px;">
+      <a href="home.html" style="font-size: 0.82rem; color: var(--text-dim);">⬅ Back to Home</a>
+    </p>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

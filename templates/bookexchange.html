@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Exchange | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>📚 Book Exchange</h1>
+    <h2>Trade textbooks with your peers — free &amp; easy</h2>
+    <hr>
+
+    <div class="list-card reveal" style="max-width: 560px; margin: 0 auto 36px; background: rgba(255,201,71,0.04); border-color: rgba(255,201,71,0.2); border-top: 3px solid var(--gold);">
+      <h3 style="color: var(--gold); text-align: center; border-color: rgba(255,201,71,0.15);">📖 List a Book</h3>
+      <form action="/add_book" method="post" style="margin: 0;">
+        <label>Book Title</label>
+        <input type="text" name="title" placeholder="e.g. Introduction to Algorithms" required style="max-width: 100%;">
+
+        <label>Author</label>
+        <input type="text" name="author" placeholder="e.g. Cormen, Leiserson, Rivest" required style="max-width: 100%;">
+
+        <label>Condition / Description</label>
+        <textarea name="description" rows="3" placeholder="Describe condition, edition, price (if any)..." required style="max-width: 100%; resize: none;"></textarea>
+
+        <label>Contact Info</label>
+        <input type="text" name="contact" placeholder="Phone or email" required style="max-width: 100%;">
+
+        <button type="submit" style="width: 100%; margin-top: 18px; background: linear-gradient(135deg, var(--gold), #d97706);">
+          List Book 📚
+        </button>
+      </form>
+    </div>
+
+    <div class="section-title"><span>📋 Available Books</span></div>
+
+    <div class="search-bar-wrap">
+      <input type="text" id="live-search" placeholder="Search books or authors...">
+    </div>
+
+    <div class="list-container">
+      {% for book in books %}
+        <div class="list-card" data-searchable>
+          <span class="badge badge-gold" style="margin-bottom: 10px; display: inline-block;">📚 Book</span>
+          <h3>{{ book.title }}</h3>
+          <p style="color: var(--accent); font-family: var(--font-heading); font-weight: 600; font-size: 0.85rem; margin-bottom: 8px;">✍️ {{ book.author }}</p>
+          <p>{{ book.description }}</p>
+          <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 0.83rem;">
+            <strong style="color: var(--text-main);">📞 Contact:</strong>
+            <span style="color: var(--gold);">{{ book.contact }}</span>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-center" style="grid-column: 1/-1; color: var(--text-sub); font-style: italic; padding: 30px 0;">
+          No books listed yet. Be the first to share! 📚
+        </p>
+      {% endfor %}
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

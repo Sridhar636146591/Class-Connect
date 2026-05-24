@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Donation | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="/main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>🩸 Blood Donation Drive</h1>
+    <h2>"Donate Blood, Save Lives" — Join our campus initiative</h2>
+    <hr>
+
+    <!-- STATS -->
+    <div class="stats-row reveal">
+      <div class="stat-box">
+        <div class="stat-number">{{ donors|length if donors else 0 }}</div>
+        <div class="stat-label">Donors Registered</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">3×</div>
+        <div class="stat-label">Lives Per Donation</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number" style="background: linear-gradient(135deg, var(--secondary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">8</div>
+        <div class="stat-label">Blood Groups Needed</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 10px;">
+
+      <!-- INFO CARD -->
+      <div class="list-card reveal" style="border-top: 3px solid var(--primary); background: rgba(255,92,92,0.04); border-color: rgba(255,92,92,0.2);">
+        <h3 style="color: var(--primary);">Why Donate Blood?</h3>
+        <p style="line-height: 1.7;">Every drop you donate can save a life. Blood donation is a noble act that connects one person's health to another's hope. Join our campus initiative to make a difference.</p>
+
+        <div style="margin-top: 20px; padding: 16px; background: rgba(255,92,92,0.06); border-radius: var(--radius-sm); border: 1px dashed rgba(255,92,92,0.2);">
+          <div style="font-family: var(--font-heading); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 10px;">📋 Eligibility</div>
+          <ul style="list-style: none; padding: 0; color: var(--text-sub); font-size: 0.87rem; line-height: 2;">
+            <li>✅ &nbsp;Age 18 – 60 years</li>
+            <li>✅ &nbsp;Weight above 50 kg</li>
+            <li>✅ &nbsp;Good health, no recent illness</li>
+          </ul>
+        </div>
+
+        <div style="margin-top: 18px; padding: 16px; background: rgba(255,92,92,0.04); border-radius: var(--radius-sm); border: 1px dashed rgba(255,92,92,0.15);">
+          <div style="font-family: var(--font-heading); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary); margin-bottom: 10px;">🗓️ Upcoming Camp</div>
+          <p style="margin: 0; font-size: 0.87rem; line-height: 1.9; color: var(--text-sub);">
+            📍 Auditorium Hall, Campus Building<br>
+            🗓️ 10th November 2025<br>
+            ⏰ 10:00 AM – 4:00 PM
+          </p>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div class="list-card reveal" style="border-top: 3px solid var(--secondary); background: rgba(124,111,255,0.04); border-color: rgba(124,111,255,0.2);">
+        <h3 style="color: var(--secondary);">Register as a Donor</h3>
+        <form action="/register_donor" method="post" style="margin: 0;">
+          <label>Full Name</label>
+          <input type="text" name="name" placeholder="John Doe" required style="max-width: 100%;">
+
+          <label>Age</label>
+          <input type="number" name="age" placeholder="21" min="18" max="60" required style="max-width: 100%;">
+
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="john@campus.edu" required style="max-width: 100%;">
+
+          <label>Blood Group</label>
+          <select name="bloodgroup" required style="max-width: 100%;">
+            <option value="">Select Blood Group</option>
+            <option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option>
+            <option>O+</option><option>O-</option>
+          </select>
+
+          <label>Medical Conditions (if any)</label>
+          <textarea name="condition" rows="2" placeholder="None" style="max-width: 100%; resize: none;"></textarea>
+
+          <button type="submit" style="width: 100%; margin-top: 18px; background: linear-gradient(135deg, var(--primary), #b91c1c); box-shadow: 0 4px 18px -4px rgba(255,92,92,0.4);">
+            Register as Donor 🩸
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top: 40px;"><span>🩸 Registered Donors</span></div>
+
+    <div class="search-bar-wrap">
+      <input type="text" id="live-search" placeholder="Search donors...">
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Blood Group</th>
+            <th>Condition</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for donor in donors %}
+          <tr>
+            <td style="color: var(--text-main); font-weight: 500;">{{ donor.name }}</td>
+            <td>{{ donor.age }}</td>
+            <td><a href="mailto:{{ donor.email }}" style="color: var(--secondary);">{{ donor.email }}</a></td>
+            <td><span class="badge badge-danger">{{ donor.bloodgroup }}</span></td>
+            <td>{{ donor.condition or '—' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="5" style="text-align: center; padding: 28px; color: var(--text-sub); font-style: italic;">No donors registered yet. Be the first hero! 🦸</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="inspire-card reveal" style="border-color: rgba(255,92,92,0.2); background: linear-gradient(135deg, rgba(255,92,92,0.07), rgba(255,92,92,0.03));">
+      <p>A single pint can save three lives. Be a hero — donate blood!</p>
+      <div class="inspire-author" style="color: var(--primary);">❤️ Every Drop Counts</div>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+  <script>
+    // Live search in table
+    const si = document.getElementById('live-search');
+    if (si) {
+      si.addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('tbody tr').forEach(row => {
+          row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+      });
+    }
+  </script>
+</body>
+</html>

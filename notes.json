@@ -1,0 +1,26 @@
+[
+  {
+    "title": "\ud83d\udc0d Python Programming",
+    "description": "Comprehensive lecture notes, syntactical reference guides, and sample codes for introductory and intermediate Python courses.",
+    "file_path": "https://drive.google.com/file/d/1Bv2yW7PWDUFspMFku_KHxrPbUh9GBvdG/view?usp=drivesdk",
+    "file_type": "PDF Document"
+  },
+  {
+    "title": "\ud83c\udf10 Web Technology",
+    "description": "Curated learning resources covering semantic HTML5, CSS3 typography transitions, client-side Javascript, and dynamic responsive site structures.",
+    "file_path": "https://drive.google.com/file/d/1v-f6W3QlWl0SQgpjI8tt1_yRlmQ-FIFA/view?usp=drivesdk",
+    "file_type": "PDF Document"
+  },
+  {
+    "title": "\ud83d\udcd6 Story of an Introvert",
+    "description": "A beautifully penned creative non-fiction essay exploring social dynamics, self-reflections, and unique introverted experiences on campus.",
+    "file_path": "https://drive.google.com/file/d/1Xr6Yj7k-vMdjAdbrlWqWDZwkprRi2_V6/view?usp=drivesdk",
+    "file_type": "PDF Document"
+  },
+  {
+    "title": "\ud83d\udc0dPython-pandas",
+    "description": "pandas library information and detailed explianation",
+    "file_path": "/uploads/PANDASLIBRARY.docx",
+    "file_type": "DOCX Document"
+  }
+]

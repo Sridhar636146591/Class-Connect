@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile | Campus Community Hub</title>
+  <link rel="stylesheet" href="/m.css">
+</head>
+<body>
+  <div class="container" style="max-width: 600px;">
+    <div class="top-buttons">
+      <a href="/profile.html" class="btn btn-ghost">⬅ Back to Profile</a>
+    </div>
+
+    <h1>✏️ Edit Profile</h1>
+    <h2>Update your campus identity</h2>
+    <hr>
+
+    <div class="list-card reveal" style="background: rgba(124,111,255,0.04); border-color: rgba(124,111,255,0.2);">
+      <form action="/update_profile" method="POST" style="margin: 0;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px;">
+          <div>
+            <label>Full Name</label>
+            <input type="text" name="username" value="{{ user.username }}" required style="max-width: 100%;">
+          </div>
+          <div>
+            <label>Gender</label>
+            <select name="gender" style="max-width: 100%;">
+              <option {% if user.gender == 'Male' %}selected{% endif %}>Male</option>
+              <option {% if user.gender == 'Female' %}selected{% endif %}>Female</option>
+              <option {% if user.gender == 'Other' %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+          <div>
+            <label>Class / Year</label>
+            <input type="text" name="classyear" value="{{ user.classyear }}" required style="max-width: 100%;">
+          </div>
+          <div>
+            <label>Department</label>
+            <input type="text" name="department" value="{{ user.department }}" required style="max-width: 100%;">
+          </div>
+        </div>
+
+        <label>Short Bio</label>
+        <textarea name="bio" rows="4" style="max-width: 100%; resize: vertical;">{{ user.bio }}</textarea>
+
+        <div style="text-align: center; margin-top: 22px;">
+          <input type="submit" value="Save Changes ✓" style="max-width: 300px; width: 100%; padding: 14px;">
+        </div>
+      </form>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

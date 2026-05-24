@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar 2026 | Campus Community Hub</title>
+  <link rel="stylesheet" href="m.css">
+  <style>
+    .cal-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .cal-nav button {
+      background: rgba(124,111,255,0.12); border: 1px solid var(--border);
+      color: var(--text-main); border-radius: 50%; width: 38px; height: 38px;
+      font-size: 1.1rem; cursor: pointer; transition: var(--transition);
+    }
+    .cal-nav button:hover { background: rgba(124,111,255,0.28); border-color: var(--secondary); }
+    .cal-month-label { font-family: var(--font-heading); font-size: 1.2rem; font-weight: 700; color: var(--secondary); }
+    .cal-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    }
+    .cal-day-header {
+      text-align: center; font-size: 0.72rem; font-weight: 700; color: var(--text-sub);
+      font-family: var(--font-heading); padding: 6px 0; text-transform: uppercase;
+    }
+    .cal-cell {
+      aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; border-radius: 10px; font-size: 0.88rem;
+      cursor: pointer; transition: var(--transition); position: relative;
+      border: 1px solid transparent;
+    }
+    .cal-cell:hover:not(.empty) { background: rgba(124,111,255,0.15); border-color: var(--secondary); }
+    .cal-cell.today { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; font-weight: 700; box-shadow: 0 0 16px -4px var(--secondary-glow); }
+    .cal-cell.has-event::after { content: '●'; position: absolute; bottom: 3px; font-size: 0.45rem; color: var(--accent); }
+    .cal-cell.empty { pointer-events: none; }
+    .cal-cell.weekend { color: var(--primary); }
+    .cal-cell.today.weekend { color: #fff; }
+
+    .event-panel {
+      margin-top: 24px;
+    }
+    .ev-add { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .ev-add input { flex: 1; min-width: 160px; border-radius: 10px; font-size: 0.85rem; padding: 10px 14px; }
+    .ev-add select { border-radius: 10px; font-size: 0.82rem; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-main); }
+    .ev-add button { padding: 10px 18px; border-radius: 10px; font-size: 0.85rem; cursor: pointer; }
+    .ev-list { display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; }
+    .ev-item {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 16px;
+    }
+    .ev-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .ev-info { flex: 1; }
+    .ev-info strong { font-size: 0.88rem; color: var(--text-main); display: block; }
+    .ev-info span { font-size: 0.76rem; color: var(--text-sub); }
+    .ev-del { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 1rem; opacity: 0.6; transition: opacity 0.2s; }
+    .ev-del:hover { opacity: 1; }
+
+    .month-year-jump { display: flex; gap: 8px; align-items: center; }
+    .month-year-jump select { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-main); border-radius: 8px; padding: 5px 8px; font-size: 0.82rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-buttons">
+      <a href="main.html" class="btn btn-ghost">⬅ Dashboard</a>
+    </div>
+
+    <h1>📅 Campus Calendar 2026</h1>
+    <h2>Track events, deadlines & important dates</h2>
+    <hr>
+
+    <div class="list-card reveal">
+      <div class="cal-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <span class="cal-month-label" id="calMonthLabel"></span>
+          <div class="month-year-jump">
+            <select id="jumpMonth" onchange="jumpTo()"></select>
+            <select id="jumpYear" onchange="jumpTo()"></select>
+          </div>
+        </div>
+        <button onclick="changeMonth(1)">›</button>
+      </div>
+
+      <div class="cal-grid" id="calDayHeaders"></div>
+      <div class="cal-grid" id="calGrid" style="margin-top:4px;"></div>
+    </div>
+
+    <div class="list-card reveal event-panel">
+      <h3 style="color:var(--secondary);margin-bottom:14px;">📌 Add Event / Reminder</h3>
+      <div class="ev-add">
+        <input type="date" id="evDate">
+        <input type="text" id="evTitle" placeholder="Event title..." maxlength="80">
+        <select id="evColor">
+          <option value="#7c6fff">🟣 Study</option>
+          <option value="#00e5c0">🟢 Exam</option>
+          <option value="#ff5c5c">🔴 Holiday</option>
+          <option value="#ffc947">🟡 Social</option>
+        </select>
+        <button onclick="addEvent()" class="btn">Add</button>
+      </div>
+      <div class="ev-list" id="evList"></div>
+    </div>
+
+    <div class="footer"><p>© 2026 Campus Community Hub</p></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    const today = new Date();
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    // Populate jump selects
+    const jm = document.getElementById('jumpMonth');
+    const jy = document.getElementById('jumpYear');
+    monthNames.forEach((m,i) => { const o = document.createElement('option'); o.value=i; o.textContent=m; jm.appendChild(o); });
+    for (let y = 2024; y <= 2028; y++) { const o = document.createElement('option'); o.value=y; o.textContent=y; jy.appendChild(o); }
+
+    function jumpTo() { viewMonth = +jm.value; viewYear = +jy.value; renderCal(); }
+
+    function changeMonth(d) { viewMonth += d; if (viewMonth > 11) { viewMonth=0; viewYear++; } if (viewMonth < 0) { viewMonth=11; viewYear--; } renderCal(); }
+
+    let events = JSON.parse(localStorage.getItem('cch_calendar') || '[]');
+
+    function saveEvents() { localStorage.setItem('cch_calendar', JSON.stringify(events)); }
+
+    function addEvent() {
+      const date = document.getElementById('evDate').value;
+      const title = document.getElementById('evTitle').value.trim();
+      const color = document.getElementById('evColor').value;
+      if (!date || !title) return;
+      events.push({ date, title, color });
+      saveEvents();
+      document.getElementById('evTitle').value = '';
+      renderCal(); renderEvents();
+    }
+
+    function delEvent(i) { events.splice(i,1); saveEvents(); renderCal(); renderEvents(); }
+
+    function renderEvents(filterDate) {
+      const list = document.getElementById('evList');
+      const filtered = filterDate ? events.filter(e => e.date === filterDate) : events.sort((a,b) => a.date.localeCompare(b.date));
+      list.innerHTML = filtered.length
+        ? filtered.map((e,i) => {
+            const realIdx = events.indexOf(e);
+            return `<div class="ev-item">
+              <div class="ev-dot" style="background:${e.color}"></div>
+              <div class="ev-info"><strong>${e.title}</strong><span>${e.date}</span></div>
+              <button class="ev-del" onclick="delEvent(${realIdx})" title="Delete">🗑️</button>
+            </div>`;
+          }).join('')
+        : `<p style="text-align:center;color:var(--text-sub);font-size:0.85rem;padding:16px 0;">No events${filterDate?' on this date':' yet'}. Add one above!</p>`;
+    }
+
+    function renderCal() {
+      jm.value = viewMonth; jy.value = viewYear;
+      document.getElementById('calMonthLabel').textContent = monthNames[viewMonth] + ' ' + viewYear;
+
+      const headers = document.getElementById('calDayHeaders');
+      headers.innerHTML = dayNames.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+
+      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+      const eventDates = new Set(events.map(e => e.date));
+
+      const grid = document.getElementById('calGrid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < firstDay; i++) {
+        const el = document.createElement('div'); el.className = 'cal-cell empty'; grid.appendChild(el);
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday = d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+        const dow = (firstDay + d - 1) % 7;
+        const isWeekend = dow === 0 || dow === 6;
+        const hasEv = eventDates.has(dateStr);
+
+        const el = document.createElement('div');
+        el.className = ['cal-cell', isToday?'today':'', isWeekend?'weekend':'', hasEv?'has-event':''].filter(Boolean).join(' ');
+        el.textContent = d;
+        el.onclick = () => { document.getElementById('evDate').value = dateStr; renderEvents(dateStr); };
+        grid.appendChild(el);
+      }
+
+      renderEvents();
+    }
+
+    // Set default date to today
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('evDate').value = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+    renderCal();
+  </script>
+</body>
+</html>
